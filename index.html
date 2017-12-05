@@ -116,7 +116,8 @@
         map.addListener('bounds_changed', function() {
           searchBox.setBounds(map.getBounds());
         });
-
+        var placename="";
+        var contentString = "";
         var markers = [];
         // Listen for the event fired when the user selects a prediction and retrieve
         // more details for that place.
@@ -149,13 +150,26 @@
             };
 
             // Create a marker for each place.
-            markers.push(new google.maps.Marker({
+
+            placename = place.name;
+            console.log(placename);
+            contentString = '<div id="review" data-name='+placename+'>'+ '<label>+'+place.name+'<br>'+place.geometry.location+"<br>"+'Reviews</label> <br>'+'<input type="submit">'+"</div>"
+            var infowindow = new google.maps.InfoWindow({
+              content: contentString,
+              maxWidth: 200
+            });
+            console.log(place.name);
+            console.log(place.geometry.location);
+            var marker=new google.maps.Marker({
               map: map,
               icon: icon,
               title: place.name,
               position: place.geometry.location
-            }));
-
+            })
+            console.log(marker);
+            marker.addListener('click', function() {
+              infowindow.open(map, marker);
+            });
             if (place.geometry.viewport) {
               // Only geocodes have viewport.
               bounds.union(place.geometry.viewport);
@@ -164,7 +178,9 @@
             }
           });
           map.fitBounds(bounds);
+
         });
+
       }
 
     </script>

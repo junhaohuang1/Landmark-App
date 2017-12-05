@@ -2,7 +2,7 @@ function initialize() {
   var mapOptions = {
     center: {lat: , lng:},
     zoom: ,
-    scrollwheel: 
+    scrollwheel:
   };
   var map = new google.maps.Map(document.getElementById('map'),
     mapOptions);
@@ -50,7 +50,7 @@ function initialize() {
 
     infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
         'Place ID: ' + place.place_id + '<br>' +
-        place.formatted_address + '</div>');
+        place.formatted_address +"<div><label>Review</label><input type='submit' id='reviews' data-place="+place.name+"></div>"+ '</div>');
     infowindow.open(map, marker);
   });
 }
