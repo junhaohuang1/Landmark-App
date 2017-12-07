@@ -1,5 +1,8 @@
 module.exports = function(sequelize, DataTypes) {
   var Review = sequelize.define("Review", {
+    location:{
+      type:DataTypes.String
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,

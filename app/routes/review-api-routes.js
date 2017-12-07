@@ -15,8 +15,8 @@ module.exports = function(app) {
   // GET route for getting all of the review
   app.get("/api/review", function(req, res) {
     var query = {};
-    if (req.query.author_id) {
-      query.AuthorId = req.query.author_id;
+    if (req.query.location) {
+      query.location = req.query.location;
     }
     // 1. Add a join here to include all of the Authors to these review
     db.Review.findAll({
@@ -75,7 +75,7 @@ module.exports = function(app) {
         res.json(result);
       });
   });
-
+  //sort by top voted reiews
   app.get("/api/sort/top",function(req, res){
     db.Review.findAll({
       include:[{
@@ -84,6 +84,16 @@ module.exports = function(app) {
         order: sequelize.col('rating')
       }]
     });
-  };
+  });
+  //sort by recent reviews
+  app.get("/api/sort/recent",function(req, res){
+    db.Review.findAll({
+      include:[{
+        model: db.Author,
+        where: query,
+        order: sequelize.col('timestamps')
+      }]
+    });
+  });
 
 };
