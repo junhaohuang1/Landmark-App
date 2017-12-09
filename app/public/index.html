@@ -153,6 +153,7 @@
 
             placename = place.name;
             console.log(placename);
+            //html for the infor box from the place marker
             contentString = '<div id="review" data-name='+placename+'>'+ '<label>+'+place.name+'<br>'+place.formatted_address+"<br>"+'Reviews</label> <br>'+'<input type="submit">'+"</div>"
             var infowindow = new google.maps.InfoWindow({
               content: contentString,
@@ -166,7 +167,6 @@
               title: place.name,
               position: place.geometry.location
             })
-            console.log(marker);
             marker.addListener('click', function() {
               infowindow.open(map, marker);
             });

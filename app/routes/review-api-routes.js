@@ -29,21 +29,6 @@ module.exports = function(app) {
     });
   });
 
-  // Get rotue for retrieving a single post
-  app.get("/api/review/:id", function(req, res) {
-    // 2. Add a join here to include the Author who wrote the Review
-    db.Review.findOne({
-      include:[{
-        model:db.Author,
-        where:{
-          id: req.params.id
-        }
-      }]
-    }).then(function(result) {
-      console.log(result);
-      res.json(result);
-    });
-  });
 
   // POST route for saving a new post
   app.post("/api/review", function(req, res) {
@@ -52,16 +37,6 @@ module.exports = function(app) {
     });
   });
 
-  // DELETE route for deleting review
-  app.delete("/api/review/:id", function(req, res) {
-    db.Review.destroy({
-      where: {
-        id: req.params.id
-      }
-    }).then(function(result) {
-      res.json(result);
-    });
-  });
 
   // PUT route for updating review
   app.put("/api/review", function(req, res) {
@@ -85,6 +60,7 @@ module.exports = function(app) {
       }]
     });
   });
+  
   //sort by recent reviews
   app.get("/api/sort/recent",function(req, res){
     db.Review.findAll({
