@@ -13,8 +13,13 @@ app.set("view engine", "handlebars");
 
 // Data
 var landmark = [
-  
+
 ];
+
+app.get("/", function(req,res){
+  return res.render("landmark")
+
+});
 
 // Routes
 app.get("/landmark/:name", function(req, res) {
