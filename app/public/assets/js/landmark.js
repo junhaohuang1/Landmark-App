@@ -1,31 +1,34 @@
 // Make sure we wait to attach our handlers until the DOM is fully loaded.
 $(function() {
-  $(".delquote").on("click", function(event) {
-    var id = $(this).data("id");
+  //get all the reviews for certain landmark
+  $(".review").on("click", function(event) {
+    var name = $(this).attr("data-name");
 
     // Send the DELETE request.
-    $.ajax("/api/quotes/" + id, {
-      type: "DELETE"
+    $.ajax("/landmark/" + name, {
+      type: "GET"
     }).then(
       function() {
-        console.log("deleted id ", id);
         // Reload the page to get the updated list
         location.reload();
       }
     );
   });
 
-  $(".create-form").on("submit", function(event) {
+  $(".submit-review").on("submit", function(event) {
     // Make sure to preventDefault on a submit event.
     event.preventDefault();
 
-    var newQuote = {
+    var newReview = {
+      location:$("location").val().trim(),
+      title: $("title").val().trim(),
       author: $("#auth").val().trim(),
-      quote: $("#quo").val().trim()
+      body: $("#quo").val().trim(),
+      rating: 0
     };
 
     // Send the POST request.
-    $.ajax("/api/quotes", {
+    $.ajax("/landmark/add", {
       type: "POST",
       data: newQuote
     }).then(

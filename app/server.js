@@ -1,38 +1,43 @@
 var express = require("express");
+var bodyParser = require("body-parser");
+var methodOverride = require("method-override");
+var path = require("path");
 var exphbs = require("express-handlebars");
-
-// Create an instance of the express app.
 var app = express();
 
-// Specify the port.
-var port = 3000;
+var PORT = process.env.PORT || 3000;
 
-// Set Handlebars as the default templating engine.
+app.use(methodOverride("_method"));
+
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-// Data
-var landmark = [
 
-];
+// Sets up the Express App
+// =============================================================
 
-app.get("/", function(req,res){
-  return res.render("landmark")
+// Requiring our models for syncing
+// var db = require("./models");
 
-});
+// Sets up the Express app to handle data parsing
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.text());
+app.use(bodyParser.json({ type: "application/vnd.api+json" }));
+
+// Static directory
+app.use(express.static("public"));
 
 // Routes
-app.get("/landmark/:name", function(req, res) {
-  for (var i = 0; i < landmark.length; i++) {
-    if (landmark[i].name === req.params.name) {
-      return res.render("landmark", landmark[i]);
-    }
-  }
-});
+// =============================================================
+// require("./routes/html-routes.js")(app);
+// require("./routes/author-api-routes.js")(app);
+// require("./routes/reivew-api-routes.js")(app);
 
-app.get("/landmark", function(req, res) {
-  res.render("ics", { ics: landmark });
-});
-
-// Initiate the listener.
-app.listen(port);
+// Syncing our sequelize models and then starting our Express app
+// =============================================================
+// db.sequelize.sync({ force: true }).then(function() {
+  app.listen(PORT, function() {
+    console.log("App listening on PORT " + PORT);
+  });
+// });
