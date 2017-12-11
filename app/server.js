@@ -17,7 +17,7 @@ app.set("view engine", "handlebars");
 // =============================================================
 
 // Requiring our models for syncing
-// var db = require("./models");
+var db = require("./models");
 
 // Sets up the Express app to handle data parsing
 app.use(bodyParser.json());
@@ -30,14 +30,45 @@ app.use(express.static("public"));
 
 // Routes
 // =============================================================
-// require("./routes/html-routes.js")(app);
-// require("./routes/author-api-routes.js")(app);
-// require("./routes/reivew-api-routes.js")(app);
+require("./routes/html-routes.js")(app);
+require("./routes/author-api-routes.js")(app);
+require("./routes/review-api-routes.js")(app);
+
 
 // Syncing our sequelize models and then starting our Express app
 // =============================================================
-// db.sequelize.sync({ force: true }).then(function() {
+db.sequelize.sync({ force: true }).then(function() {
   app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
   });
+});
+
+// Data
+//
+// var express = require("express");
+// var app = express();
+// var landmark = [
+//
+// ];
+//
+// app.get("/", function(req,res){
+//   return res.render("landmark")
 // });
+//
+// // Routes
+// app.get("/landmark/:name", function(req, res) {
+//   for (var i = 0; i < landmark.length; i++) {
+//     if (landmark[i].name === req.params.name) {
+//       return res.render("landmark", landmark[i]);
+//     }
+//   }
+// });
+//
+// app.get("/landmark", function(req, res) {
+//   res.render("ics", { ics: landmark });
+// });
+//
+// //update Reviews
+// app.post("/landmark/add", function(req,res){
+//   res.render("some placeholder", {review: review})
+// })

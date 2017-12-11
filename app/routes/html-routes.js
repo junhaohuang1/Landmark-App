@@ -1,29 +1,35 @@
-// Data
-//
-// var express = require("express");
-// var app = express();
-// var landmark = [
-//
-// ];
-//
-// app.get("/", function(req,res){
-//   return res.render("landmark")
-// });
-//
-// // Routes
-// app.get("/landmark/:name", function(req, res) {
-//   for (var i = 0; i < landmark.length; i++) {
-//     if (landmark[i].name === req.params.name) {
-//       return res.render("landmark", landmark[i]);
-//     }
-//   }
-// });
-//
-// app.get("/landmark", function(req, res) {
-//   res.render("ics", { ics: landmark });
-// });
-//
-// //update Reviews
-// app.post("/landmark/add", function(req,res){
-//   res.render("some placeholder", {review: review})
-// })
+// *********************************************************************************
+// html-routes.js - this file offers a set of routes for sending users to the various html pages
+// *********************************************************************************
+
+// Dependencies
+// =============================================================
+var path = require("path");
+
+// Routes
+// =============================================================
+module.exports = function(app) {
+
+  // Each of the below routes just handles the HTML page that the user gets sent to.
+
+  // index route loads view.html
+  app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/blog.html"));
+  });
+
+  // cms route loads cms.html
+  app.get("/cms", function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/cms.html"));
+  });
+
+  // blog route loads blog.html
+  app.get("/blog", function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/blog.html"));
+  });
+
+  // authors route loads author-manager.html
+  app.get("/authors", function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/author-manager.html"));
+  });
+
+};
