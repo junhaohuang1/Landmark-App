@@ -12,6 +12,12 @@ var db = require("../models");
 // =============================================================
 module.exports = function(app) {
 
+    app.get("/", function(req, res) {
+        res.render("");
+
+    });
+
+
     // GET route for getting all of the review
     app.get("/review/:location", function(req, res) {
         var query = {};

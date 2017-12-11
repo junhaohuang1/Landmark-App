@@ -1,4 +1,5 @@
 // Make sure we wait to attach our handlers until the DOM is fully loaded.
+console.log("hi");
 $(document).ready(function() {
     //get all the reviews for certain landmark
     $(".reviews").on("click", function(event) {
