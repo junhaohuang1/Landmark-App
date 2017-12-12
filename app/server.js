@@ -9,9 +9,6 @@ var PORT = process.env.PORT || 3000;
 
 app.use(methodOverride("_method"));
 
-
-
-
 // Sets up the Express App
 // =============================================================
 
@@ -22,17 +19,18 @@ var db = require("./models");
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static directory
 
 
 // Routes
 // =============================================================
-require("./routes/author-api-routes.js")(app);
+// require("./routes/author-api-routes.js")(app);
 require("./routes/review-api-routes.js")(app);
 
 app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(methodOverride("_method"));
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");

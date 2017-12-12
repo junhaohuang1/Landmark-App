@@ -12,118 +12,119 @@ var db = require("../models");
 // =============================================================
 module.exports = function(app) {
 
-    app.get("/", function(req, res) {
-        res.render("");
+  app.get("/", function(req, res) {
+    res.render("map");
 
+  });
+
+
+  // GET route for getting all of the review
+  app.get("/review/:coordinates", function(req, res) {
+    var query = {};
+    if (req.params.coordinates) {
+      query.coordinates = req.params.coordinates;
+    }
+    // 1. Add a join here to include all of the Authors to these review
+    db.Review.findAll({
+      include: [{
+        where: query
+      }]
+    }).then(function(result) {
+      res.render("index", result);
     });
+  });
+
+  // POST route for saving a new post
+  app.post("/review/add", function(req, res) {
+    console.log(req.body);
+    db.Review.create({
+      location: req.body.location,
+      author: req.body.author,
+      title: req.body.title,
+      body: req.body.body
+    }).then(function(result) {
+      console.log(result);
+      res.render("index", result);
+    })
+  });
 
 
-    // GET route for getting all of the review
-    app.get("/review/:location", function(req, res) {
-        var query = {};
-        if (req.params.location) {
-            query.location = req.params.location;
+  // PUT route for updating review
+  app.put("/api/review/update/:id", function(req, res) {
+    db.Review.update(
+      req.body, {
+        where: {
+          id: req.params.id
         }
-        // 1. Add a join here to include all of the Authors to these review
-        db.Review.findAll({
-            include: [{
-                model: db.Author,
-                where: query
-            }]
-        }).then(function(result) {
-            res.render("landmark", result);
-        });
+      }).then(function(result) {
+      res.render("index", result);
     });
+  });
+  //sort by top voted reiews
+  app.get("/api/sort/top/:coordinates", function(req, res) {
+    var query = {};
+    if (req.params.coordinates) {
+      query.coordinates = req.params.coordinates;
+    }
+    db.Review.findAll({
+      include: [{
+        model: db.Author,
+        where: query,
+        order: [
+          ["rating", "DESC"]
+        ]
+      }]
+    }).then(function(result) {
+      res.render("index", result);
+    })
+  });
+  //sort by least voted reviews
+  app.get("/api/sort/least/:coordinates", function(req, res) {
+    var query = {};
+    if (req.params.coordinates) {
+      query.coordinates = req.params.coordinates;
+    }
+    db.Review.findAll({
+      include: [{
+        model: db.Author,
+        where: query,
+        order: [
+          ["rating", "ASC"]
+        ]
+      }]
+    }).then(function(result) {
+      res.render("index", result);
+    })
+  });
 
-    // POST route for saving a new post
-    app.post("/review/add", function(req, res) {
-        db.Review.create({
-            location: req.body.location,
-            title: req.body.title,
-            body: req.body.body,
-            rating: req.body.rating
-        }).then(function(result) {
-            res.render("landmark", result);
-        });
-    });
-
-
-    // PUT route for updating review
-    app.put("/api/review/update/:id", function(req, res) {
-        db.Review.update(
-            req.body, {
-                where: {
-                    id: req.params.id
-                }
-            }).then(function(result) {
-            res.render("landmark", result);
-        });
-    });
-    //sort by top voted reiews
-    app.get("/api/sort/top/:location", function(req, res) {
-        var query = {};
-        if (req.params.location) {
-            query.location = req.params.location;
+  //sort by recent reviews
+  app.get("/api/sort/recent/:coordinates", function(req, res) {
+    var query = {};
+    if (req.params.coordinates) {
+      query.coordinates = req.params.coordinates;
+    }
+    db.Review.findAll({
+      include: [{
+        model: db.Author,
+        where: query,
+        order: [
+          ["timestamps", "ASC"]
+        ]
+      }]
+    }).then(function(result) {
+      res.render("index", result);
+    })
+  });
+  //update the rating of the review
+  app.put("/api/rating/:id", function(req, res) {
+    db.Review.update(
+      req.body, {
+        where: {
+          id: req.params.id
         }
-        db.Review.findAll({
-            include: [{
-                model: db.Author,
-                where: query,
-                order: [
-                    ["rating", "DESC"]
-                ]
-            }]
-        }).then(function(result) {
-            res.render("landmark", result);
-        })
+      }).then(function(result) {
+      res.render("index", result);
     });
-    //sort by least voted reviews
-    app.get("/api/sort/top/:location", function(req, res) {
-        var query = {};
-        if (req.params.location) {
-            query.location = req.params.location;
-        }
-        db.Review.findAll({
-            include: [{
-                model: db.Author,
-                where: query,
-                order: [
-                    ["rating", "ASC"]
-                ]
-            }]
-        }).then(function(result) {
-            res.render("landmark", result);
-        })
-    });
-
-    //sort by recent reviews
-    app.get("/api/sort/recent/:location", function(req, res) {
-        var query = {};
-        if (req.params.location) {
-            query.location = req.params.location;
-        }
-        db.Review.findAll({
-            include: [{
-                model: db.Author,
-                where: query,
-                order: [
-                    ["timestamps", "ASC"]
-                ]
-            }]
-        }).then(function(result) {
-            res.render("landmark", result);
-        })
-    });
-    //update the rating of the review
-    app.put("/api/rating/:id", function(req, res) {
-        db.Review.update(
-            req.body, {
-                where: {
-                    id: req.params.id
-                }
-            }).then(function(result) {
-            res.render("landmark", result);
-        });
-    });
+  });
 
 };

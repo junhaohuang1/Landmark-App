@@ -1,107 +1,122 @@
 // Make sure we wait to attach our handlers until the DOM is fully loaded.
-console.log("hi");
 $(document).ready(function() {
-    //get all the reviews for certain landmark
-    $(".reviews").on("click", function(event) {
-        var location = $(this).attr("data-name");
-        $.ajax("/review/" + location, {
-            type: "GET"
-        }).then(
-            function() {
-                // Reload the page to get the updated list
-                location.reload();
-            }
-        );
-    });
+  //get all the reviews for certain landmark
 
-    $(".submit-review").on("submit", function(event) {
-        // Make sure to preventDefault on a submit event.
-        event.preventDefault();
+  var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
 
-        var newReview = {
-            location: $("location").val().trim(),
-            title: $("title").val().trim(),
-            body: $("#review").val().trim(),
-            rating: 0
-        };
+  $("#check-review").on("click", function(event) {
+    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
+    console.log("clicking something");
+    $.ajax("/review/" + coordinates, {
+      type: "GET"
+    }).then(
+      function() {
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
 
-        // Send the POST request.
-        $.ajax("/review/add", {
-            type: "POST",
-            data: newQuote
-        }).then(
-            function() {
-                console.log("created new review");
-                // Reload the page to get the updated list
-                location.reload();
-            }
-        );
-    });
+  $(".create-form").on("submit", function(event) {
+    // Make sure to preventDefault on a submit event.
+    event.preventDefault();
+    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
+    console.log(coordinates);
+    var newReview = {
+      location: coordinates,
+      author: $("#auth").val().trim(),
+      title: $("#title").val().trim(),
+      body: $("#body").val().trim()
+    };
 
-    $(".update-review").on("submit", function(event) {
-        // Make sure to preventDefault on a submit event.
-        event.preventDefault();
+    // Send the POST request.
+    $.ajax("/review/add", {
+      type: "POST",
+      data: newReview,
+    }).then(
+      function() {
+        console.log("created new reivew");
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
 
-        var updatedQuote = {
-            author: $("#auth").val().trim(),
-            review: $("#review").val().trim()
-        };
+  $(".update-review").on("submit", function(event) {
+    // Make sure to preventDefault on a submit event.
+    event.preventDefault();
 
-        var id = $(this).data("id");
+    var updatedQuote = {
+      author: $("#auth").val().trim(),
+      review: $("#review").val().trim()
+    };
 
-        // Send the POST request.
-        $.ajax("/api/review/update" + id, {
-            type: "PUT",
-            data: updatedQuote
-        }).then(
-            function() {
-                console.log("updated quote");
-                // Reload the page to get the updated list
-                location.assign("/");
-            }
-        );
-    });
-    //ajax call to get the most top rated reviews
-    $(".sort-by-top").click("submit", function(event) {
-        event.preventDefault();
-        var location = $(this).attr("data-name");
-        $.ajax("/api/sort/top" + location, {
-            type: "GET"
-        }).then(
-            function() {
-                location.reload();
-            }
-        )
-    });
-    //ajax call to sort the reviews by most recent
-    $(".sort-by-recent").click("submit", function(event) {
-        event.preventDefault();
-        var location = $(this).attr("data-name");
-        $.ajax("/api/sort/recent" + location, {
-            type: "GET"
-        }).then(
-            function() {
-                location.reload();
-            }
-        )
-    });
-    //ajax call to update the rating of the review
-    $(".update-rating").click("submit", function(event) {
-        event.preventDefault();
-        var id = $(this).data("id");
-        var updatedRating = {
-            rating: $(".rating").val().trim()
-        };
-        $.ajax("/api/rating/" + id, {
-            type: "PUT",
-            data: updatedRating
-        }).then(
-            function() {
-                location.assign("/");
-            })
-    })
+    var id = $(this).data("id");
+
+    // Send the POST request.
+    $.ajax("/api/review/update" + id, {
+      type: "PUT",
+      data: updatedQuote
+    }).then(
+      function() {
+        console.log("updated quote");
+        // Reload the page to get the updated list
+        location.assign("/");
+      }
+    );
+  });
+  //ajax call to get the most top rated reviews
+  $(".sort-by-top").click("submit", function(event) {
+    event.preventDefault();
+    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
+    $.ajax("/api/sort/top" + coordinates, {
+      type: "GET"
+    }).then(
+      function() {
+        location.reload();
+      }
+    )
+  });
+  //sort by least voted reviews
+  $(".sort-by-least").click("submit", function(event) {
+    event.preventDefault();
+    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
+    $.ajax("/api/sort/least" + coordinates, {
+      type: "GET"
+    }).then(
+      function() {
+        location.reload();
+      }
+    )
+  });
+  //ajax call to sort the reviews by most recent
+  $(".sort-by-recent").click("submit", function(event) {
+    event.preventDefault();
+    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
+    $.ajax("/api/sort/recent" + coordinates, {
+      type: "GET"
+    }).then(
+      function() {
+        location.reload();
+      }
+    )
+  });
+  //ajax call to update the rating of the review
+  $(".update-rating").click("submit", function(event) {
+    event.preventDefault();
+    var id = $(this).data("id");
+    var updatedRating = {
+      rating: $(".rating").val().trim()
+    };
+    $.ajax("/api/rating/" + id, {
+      type: "PUT",
+      data: updatedRating
+    }).then(
+      function() {
+        location.assign("/");
+      })
+  })
 });
-
 
 // This example adds a search box to a map, using the Google Place Autocomplete
 // feature. People can enter geographical searches. The search box will return a
@@ -112,84 +127,85 @@ $(document).ready(function() {
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
 function initAutocomplete() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -33.8688, lng: 151.2195 },
-        zoom: 13,
-        mapTypeId: 'roadmap'
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {
+      lat: -33.8688,
+      lng: 151.2195
+    },
+    zoom: 13,
+    mapTypeId: 'roadmap'
+  });
+
+  // Create the search box and link it to the UI element.
+  var input = document.getElementById('pac-input');
+  var searchBox = new google.maps.places.SearchBox(input);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+  // Bias the SearchBox results towards current map's viewport.
+  map.addListener('bounds_changed', function() {
+    searchBox.setBounds(map.getBounds());
+  });
+  var contentString = "";
+  var markers = [];
+  // Listen for the event fired when the user selects a prediction and retrieve
+  // more details for that place.
+  searchBox.addListener('places_changed', function() {
+    var places = searchBox.getPlaces();
+
+    if (places.length == 0) {
+      return;
+    }
+
+    // Clear out the old markers.
+    markers.forEach(function(marker) {
+      marker.setMap(null);
     });
+    markers = [];
 
-    // Create the search box and link it to the UI element.
-    var input = document.getElementById('pac-input');
-    var searchBox = new google.maps.places.SearchBox(input);
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    // For each place, get the icon, name and location.
+    var bounds = new google.maps.LatLngBounds();
+    places.forEach(function(place) {
+      if (!place.geometry) {
+        console.log("Returned place contains no geometry");
+        return;
+      }
+      var icon = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
 
-    // Bias the SearchBox results towards current map's viewport.
-    map.addListener('bounds_changed', function() {
-        searchBox.setBounds(map.getBounds());
+      // Create a marker for each place.
+
+      var marker = new google.maps.Marker({
+        map: map,
+        icon: icon,
+        title: place.name,
+        position: place.geometry.location
+      })
+      //html for the info box from the place marker
+
+      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br>Check Reviews</label><br><input id="check-review" type="submit"></div>`
+
+      var infowindow = new google.maps.InfoWindow({
+        content: contentString,
+        maxWidth: 200
+      });
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+        console.log($("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng"));
+      });
+      if (place.geometry.viewport) {
+        // Only geocodes have viewport.
+        bounds.union(place.geometry.viewport);
+      } else {
+        bounds.extend(place.geometry.location);
+      }
     });
-    var placename = "";
-    var contentString = "";
-    var markers = [];
-    // Listen for the event fired when the user selects a prediction and retrieve
-    // more details for that place.
-    searchBox.addListener('places_changed', function() {
-        var places = searchBox.getPlaces();
+    map.fitBounds(bounds);
 
-        if (places.length == 0) {
-            return;
-        }
-
-        // Clear out the old markers.
-        markers.forEach(function(marker) {
-            marker.setMap(null);
-        });
-        markers = [];
-
-        // For each place, get the icon, name and location.
-        var bounds = new google.maps.LatLngBounds();
-        places.forEach(function(place) {
-            if (!place.geometry) {
-                console.log("Returned place contains no geometry");
-                return;
-            }
-            var icon = {
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25)
-            };
-
-            // Create a marker for each place.
-
-            placename = place.name;
-            console.log(placename);
-            //html for the info box from the place marker
-            contentString = '<div " data-name=' + placename + '>' + '<label>+' + place.name + '<br>' + place.formatted_address + "<br>" + 'Reviews</label> <br>' + '<input id="review" type="submit">' + "</div>"
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString,
-                maxWidth: 200
-            });
-            console.log(place.name);
-            console.log(place.geometry.location);
-            var marker = new google.maps.Marker({
-                map: map,
-                icon: icon,
-                title: place.name,
-                position: place.geometry.location
-            })
-            marker.addListener('click', function() {
-                infowindow.open(map, marker);
-            });
-            if (place.geometry.viewport) {
-                // Only geocodes have viewport.
-                bounds.union(place.geometry.viewport);
-            } else {
-                bounds.extend(place.geometry.location);
-            }
-        });
-        map.fitBounds(bounds);
-
-    });
+  });
 
 }
