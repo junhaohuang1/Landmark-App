@@ -20,15 +20,10 @@ module.exports = function(app) {
 
   // GET route for getting all of the review
   app.get("/review/:coordinates", function(req, res) {
-    var query = {};
-    if (req.params.coordinates) {
-      query.coordinates = req.params.coordinates;
-    }
-    // 1. Add a join here to include all of the Authors to these review
     db.Review.findAll({
-      include: [{
-        where: query
-      }]
+      where:{
+        location: req.params.coordinates
+      }
     }).then(function(result) {
       res.render("index", result);
     });
