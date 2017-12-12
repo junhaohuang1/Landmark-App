@@ -164,7 +164,7 @@ function initAutocomplete() {
 
             placename = place.name;
             console.log(placename);
-            //html for the infor box from the place marker
+            //html for the info box from the place marker
             contentString = '<div " data-name=' + placename + '>' + '<label>+' + place.name + '<br>' + place.formatted_address + "<br>" + 'Reviews</label> <br>' + '<input id="review" type="submit">' + "</div>"
             var infowindow = new google.maps.InfoWindow({
                 content: contentString,

@@ -69,7 +69,27 @@ module.exports = function(app) {
             include: [{
                 model: db.Author,
                 where: query,
-                order: sequelize.col('rating')
+                order: [
+                    ["rating", "DESC"]
+                ]
+            }]
+        }).then(function(result) {
+            res.render("landmark", result);
+        })
+    });
+    //sort by least voted reviews
+    app.get("/api/sort/top/:location", function(req, res) {
+        var query = {};
+        if (req.params.location) {
+            query.location = req.params.location;
+        }
+        db.Review.findAll({
+            include: [{
+                model: db.Author,
+                where: query,
+                order: [
+                    ["rating", "ASC"]
+                ]
             }]
         }).then(function(result) {
             res.render("landmark", result);
@@ -86,7 +106,9 @@ module.exports = function(app) {
             include: [{
                 model: db.Author,
                 where: query,
-                order: sequelize.col('timestamps')
+                order: [
+                    ["timestamps", "ASC"]
+                ]
             }]
         }).then(function(result) {
             res.render("landmark", result);
