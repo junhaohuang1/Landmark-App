@@ -73,3 +73,4 @@ db.sequelize.sync({ force: false }).then(function() {
 // app.post("/landmark/add", function(req,res){
 //   res.render("some placeholder", {review: review})
 // })
+require("./public/assets/js/firebase.js")(app);
