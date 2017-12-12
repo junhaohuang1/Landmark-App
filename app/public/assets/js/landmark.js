@@ -1,10 +1,7 @@
 // Make sure we wait to attach our handlers until the DOM is fully loaded.
 $(document).ready(function() {
   //get all the reviews for certain landmark
-
-  var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
-
-  $("#check-review").on("click", function(event) {
+  $(document).on("submit",$('form[name ="check"]'), function(event) {
     var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
     console.log("clicking something");
     $.ajax("/review/" + coordinates, {
@@ -16,6 +13,7 @@ $(document).ready(function() {
       }
     );
   });
+
 
   $(".create-form").on("submit", function(event) {
     // Make sure to preventDefault on a submit event.
@@ -187,7 +185,7 @@ function initAutocomplete() {
       })
       //html for the info box from the place marker
 
-      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br>Check Reviews</label><br><input id="check-review" type="submit"></div>`
+      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><input name="check" id="check-review" value="Check Reviews" type="submit"><input name="write"id="write-review" value="Write Reviews" type="submit"></form></div>`
 
       var infowindow = new google.maps.InfoWindow({
         content: contentString,
@@ -205,6 +203,7 @@ function initAutocomplete() {
       }
     });
     map.fitBounds(bounds);
+
 
   });
 
