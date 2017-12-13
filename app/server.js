@@ -27,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 // =============================================================
 // require("./routes/author-api-routes.js")(app);
+// require("./routes/html-routes.js")(app);
 require("./routes/review-api-routes.js")(app);
 
 app.use(express.static("public"));

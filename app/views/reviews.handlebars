@@ -1,0 +1,36 @@
+<ul>
+
+    <h1>Landmark!</h1>
+    <h2> Sumbit a Review </h2>
+    <form class="create-form">
+
+      <div class="form-group">
+        <label for="land"> Title:</label>
+        <input Type="text" id="title" name="title">
+      </div>
+
+      <div class="form-group">
+        <label for="auth"> Author:</label>
+        <input Type="text" id="auth" name="author">
+      </div>
+
+      <div class="form-group">
+        <label for="body"> Body: </label>
+        <textarea id="body" name="body" row="8" cols="40"></textarea>
+      </div>
+
+      <button type="submit">Submit</button>
+
+    </form>
+
+    {{#each reviews}}
+      <li>
+        <p>Title: {{this.title}}</p>
+        <p>Reviews: {{this.review}}</p>
+        <p>Rating: {{this.rating}}</p>
+        <p>Author: {{this.author}}</p>
+        <p>Review: {{this.body}}</p>
+      </li>
+    {{/each}}
+
+</ul>

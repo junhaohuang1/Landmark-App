@@ -1,45 +1,49 @@
 // Make sure we wait to attach our handlers until the DOM is fully loaded.
 $(document).ready(function() {
   //get all the reviews for certain landmark
-  $(document).on("submit",$('form[name ="check"]'), function(event) {
-    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
+  var coordinates;
+  $(document).on("submit", $('form[name ="review"]'), function(event) {
+    event.preventDefault();
+    coordinates = $("#info-box").attr("data-lat")  + $("#info-box").attr("data-lng");
     console.log("clicking something");
     $.ajax("/review/" + coordinates, {
       type: "GET"
     }).then(
       function() {
         // Reload the page to get the updated list
-        location.reload();
+        console.log("i m here");
+        location.assign("/review/" + coordinates);
       }
     );
+
   });
 
 
+  //submit reviews to sql
   $(".create-form").on("submit", function(event) {
     // Make sure to preventDefault on a submit event.
     event.preventDefault();
-    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
-    console.log(coordinates);
-    var newReview = {
-      location: coordinates,
-      author: $("#auth").val().trim(),
-      title: $("#title").val().trim(),
-      body: $("#body").val().trim()
-    };
-
-    // Send the POST request.
-    $.ajax("/review/add", {
-      type: "POST",
-      data: newReview,
-    }).then(
-      function() {
-        console.log("created new reivew");
-        // Reload the page to get the updated list
-        location.reload();
-      }
-    );
+    console.log(window.location.href.substring(window.location.href.indexOf("view")+5));
+    // var newReview = {
+    //   location: window.location.href.substring(window.location.href.indexOf("view")+5),
+    //   author: $("#auth").val().trim(),
+    //   title: $("#title").val().trim(),
+    //   body: $("#body").val().trim()
+    // };
+    //
+    // // Send the POST request.
+    // $.ajax("/review/add", {
+    //   type: "POST",
+    //   data: newReview,
+    // }).then(
+    //   function() {
+    //     console.log("created new reivew");
+    //     // Reload the page to get the updated list
+    //     // location.reload();
+    //   }
+    // );
   });
-
+  //update reviews
   $(".update-review").on("submit", function(event) {
     // Make sure to preventDefault on a submit event.
     event.preventDefault();
@@ -66,7 +70,6 @@ $(document).ready(function() {
   //ajax call to get the most top rated reviews
   $(".sort-by-top").click("submit", function(event) {
     event.preventDefault();
-    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
     $.ajax("/api/sort/top" + coordinates, {
       type: "GET"
     }).then(
@@ -78,7 +81,6 @@ $(document).ready(function() {
   //sort by least voted reviews
   $(".sort-by-least").click("submit", function(event) {
     event.preventDefault();
-    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
     $.ajax("/api/sort/least" + coordinates, {
       type: "GET"
     }).then(
@@ -90,7 +92,6 @@ $(document).ready(function() {
   //ajax call to sort the reviews by most recent
   $(".sort-by-recent").click("submit", function(event) {
     event.preventDefault();
-    var coordinates = $("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng");
     $.ajax("/api/sort/recent" + coordinates, {
       type: "GET"
     }).then(
@@ -184,8 +185,8 @@ function initAutocomplete() {
         position: place.geometry.location
       })
       //html for the info box from the place marker
-
-      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><input name="check" id="check-review" value="Check Reviews" type="submit"><input name="write"id="write-review" value="Write Reviews" type="submit"></form></div>`
+      var coordinates = marker.getPosition().lat() + marker.getPosition().lng();
+      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button><button method="GET" name="write" id="write-review" value=${coordinates} type="submit">Write Review</button></form></div>`
 
       var infowindow = new google.maps.InfoWindow({
         content: contentString,

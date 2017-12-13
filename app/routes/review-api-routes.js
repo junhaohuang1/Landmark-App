@@ -18,16 +18,22 @@ module.exports = function(app) {
   });
 
 
-  // GET route for getting all of the review
   app.get("/review/:coordinates", function(req, res) {
-    db.Review.findAll({
-      where:{
+  // replace old function with sequelize function
+  db.Review.findAll({
+    where:{
         location: req.params.coordinates
-      }
-    }).then(function(result) {
-      res.render("index", result);
-    });
+    }
+  })
+  .then(function(data) {
+    // into the main index, updating the page
+    console.log("found something");
+    var hbsObject = {
+      reviews: data
+    };
+    res.render("reviews", hbsObject);
   });
+});
 
   // POST route for saving a new post
   app.post("/review/add", function(req, res) {
@@ -87,8 +93,11 @@ module.exports = function(app) {
           ["rating", "ASC"]
         ]
       }]
-    }).then(function(result) {
-      res.render("index", result);
+    }).then(function(data) {
+      var hbsObject = {
+        reviews: data
+      };
+      res.render("index", hbsObject);
     })
   });
 
@@ -106,8 +115,11 @@ module.exports = function(app) {
           ["timestamps", "ASC"]
         ]
       }]
-    }).then(function(result) {
-      res.render("index", result);
+    }).then(function(data) {
+      var hbsObject = {
+        reviews: data
+      };
+      res.render("index", hbsObject);
     })
   });
   //update the rating of the review
