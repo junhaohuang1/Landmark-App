@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "none",
+    "password": "Pencil19!",
     "database": "landmark",
     "host": "127.0.0.1",
     "dialect": "mysql"

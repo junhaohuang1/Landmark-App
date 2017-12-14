@@ -45,7 +45,7 @@ module.exports = function(app) {
       body: req.body.body
     }).then(function(result) {
       console.log(result);
-      res.render("index", result);
+      res.render("reviews", result);
     })
   });
 
@@ -58,7 +58,7 @@ module.exports = function(app) {
           id: req.params.id
         }
       }).then(function(result) {
-      res.render("index", result);
+      res.render("reviews", result);
     });
   });
   //sort by top voted reiews
@@ -76,7 +76,7 @@ module.exports = function(app) {
         ]
       }]
     }).then(function(result) {
-      res.render("index", result);
+      res.render("reviews", result);
     })
   });
   //sort by least voted reviews
@@ -97,7 +97,7 @@ module.exports = function(app) {
       var hbsObject = {
         reviews: data
       };
-      res.render("index", hbsObject);
+      res.render("reviews", hbsObject);
     })
   });
 
@@ -119,7 +119,7 @@ module.exports = function(app) {
       var hbsObject = {
         reviews: data
       };
-      res.render("index", hbsObject);
+      res.render("reviews", hbsObject);
     })
   });
   //update the rating of the review
@@ -130,7 +130,7 @@ module.exports = function(app) {
           id: req.params.id
         }
       }).then(function(result) {
-      res.render("index", result);
+      res.render("reviews", result);
     });
   });
 

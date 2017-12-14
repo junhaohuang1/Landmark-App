@@ -2,8 +2,9 @@
 $(document).ready(function() {
   //get all the reviews for certain landmark
   var coordinates;
-  $(document).on("submit", $('form[name ="review"]'), function(event) {
+  $(document).on("submit", $('form[id ="check-review"]'), function(event) {
     event.preventDefault();
+    console.log("i shouldn't be here?");
     coordinates = $("#info-box").attr("data-lat")  + $("#info-box").attr("data-lng");
     console.log("clicking something");
     $.ajax("/review/" + coordinates, {
@@ -63,7 +64,7 @@ $(document).ready(function() {
       function() {
         console.log("updated quote");
         // Reload the page to get the updated list
-        location.assign("/");
+        location.reload();
       }
     );
   });
@@ -74,7 +75,7 @@ $(document).ready(function() {
       type: "GET"
     }).then(
       function() {
-        location.reload();
+        location.assign("/api/sort/top" + coordinates);
       }
     )
   });
@@ -85,7 +86,7 @@ $(document).ready(function() {
       type: "GET"
     }).then(
       function() {
-        location.reload();
+        location.assign("/api/sort/least" + coordinates);
       }
     )
   });
@@ -96,26 +97,43 @@ $(document).ready(function() {
       type: "GET"
     }).then(
       function() {
-        location.reload();
+        location.assign("/api/sort/least" + coordinates);
       }
     )
   });
   //ajax call to update the rating of the review
-  $(".update-rating").click("submit", function(event) {
+  $(".upvote-rating").click("submit", function(event) {
     event.preventDefault();
     var id = $(this).data("id");
     var updatedRating = {
-      rating: $(".rating").val().trim()
+      rating: $(".rating").val().trim()+1
     };
     $.ajax("/api/rating/" + id, {
       type: "PUT",
       data: updatedRating
     }).then(
       function() {
-        location.assign("/");
+        location.reload("/api/rating/" + id);
+      })
+  })
+
+  $(".downvote-rating").click("submit", function(event) {
+    event.preventDefault();
+    var id = $(this).data("id");
+    var updatedRating = {
+      rating: $(".rating").val().trim()-1
+    };
+    $.ajax("/api/rating/" + id, {
+      type: "PUT",
+      data: updatedRating
+    }).then(
+      function() {
+        location.reload("/api/rating/" + id);
       })
   })
 });
+});
+
 
 // This example adds a search box to a map, using the Google Place Autocomplete
 // feature. People can enter geographical searches. The search box will return a
@@ -186,7 +204,7 @@ function initAutocomplete() {
       })
       //html for the info box from the place marker
       var coordinates = marker.getPosition().lat() + marker.getPosition().lng();
-      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button><button method="GET" name="write" id="write-review" value=${coordinates} type="submit">Write Review</button></form></div>`
+      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form id="check-review"><button method="GET" name="review"  value=${coordinates} type="submit">Check Reviews</button></form><form id="write-review"><button method="GET" name="write"  value=${coordinates} type="submit">Write Review</button></form></div>`
 
       var infowindow = new google.maps.InfoWindow({
         content: contentString,
