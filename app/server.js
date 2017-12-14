@@ -4,6 +4,8 @@ var methodOverride = require("method-override");
 var path = require("path");
 var exphbs = require("express-handlebars");
 var app = express();
+Twit = require('twit');
+io = require('socket.io').listen(server);
 
 var PORT = process.env.PORT || 3000;
 

@@ -16,6 +16,32 @@ var landmark = [
   
 ];
 
+//socket Io 
+Twit = require('twit');
+io = require('socket.io').listen(server);
+var watchList = ['landmark'];
+io.sockets.on('connection', function (socket) {
+  console.log('Connected');
+
+  var T = new Twit({
+    consumer_key:         ''
+  , consumer_secret:      ''
+  , access_token:         ''
+  , access_token_secret:  ''
+})
+ T.stream('statuses/filter', { track: watchList },function (stream) {
+
+  stream.on('tweet', function (tweet) {
+
+        io.sockets.emit('stream',tweet.text);
+        console.log(tweet.text);
+
+  });
+ });
+}); 
+
+
+
 // Routes
 app.get("/landmark/:name", function(req, res) {
   for (var i = 0; i < landmark.length; i++) {
