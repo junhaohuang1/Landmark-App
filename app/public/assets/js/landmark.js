@@ -132,7 +132,6 @@ $(document).ready(function() {
       })
   })
 });
-});
 
 
 // This example adds a search box to a map, using the Google Place Autocomplete
