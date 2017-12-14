@@ -2,7 +2,7 @@
 $(document).ready(function() {
   //get all the reviews for certain landmark
   var coordinates;
-  $(document).on("submit", $('form[id ="check-review"]'), function(event) {
+  $("#map").on("submit", $("#check-review"), function(event) {
     event.preventDefault();
     console.log("i shouldn't be here?");
     coordinates = $("#info-box").attr("data-lat")  + $("#info-box").attr("data-lng");
@@ -25,24 +25,24 @@ $(document).ready(function() {
     // Make sure to preventDefault on a submit event.
     event.preventDefault();
     console.log(window.location.href.substring(window.location.href.indexOf("view")+5));
-    // var newReview = {
-    //   location: window.location.href.substring(window.location.href.indexOf("view")+5),
-    //   author: $("#auth").val().trim(),
-    //   title: $("#title").val().trim(),
-    //   body: $("#body").val().trim()
-    // };
-    //
-    // // Send the POST request.
-    // $.ajax("/review/add", {
-    //   type: "POST",
-    //   data: newReview,
-    // }).then(
-    //   function() {
-    //     console.log("created new reivew");
-    //     // Reload the page to get the updated list
-    //     // location.reload();
-    //   }
-    // );
+    var newReview = {
+      location: window.location.href.substring(window.location.href.indexOf("view")+5),
+      author: $("#auth").val().trim(),
+      title: $("#title").val().trim(),
+      body: $("#body").val().trim()
+    };
+
+    // Send the POST request.
+    $.ajax("/review/add", {
+      type: "POST",
+      data: newReview,
+    }).then(
+      function() {
+        console.log("created new reivew");
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
   });
   //update reviews
   $(".update-review").on("submit", function(event) {
@@ -203,7 +203,7 @@ function initAutocomplete() {
       })
       //html for the info box from the place marker
       var coordinates = marker.getPosition().lat() + marker.getPosition().lng();
-      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form id="check-review"><button method="GET" name="review"  value=${coordinates} type="submit">Check Reviews</button></form><form id="write-review"><button method="GET" name="write"  value=${coordinates} type="submit">Write Review</button></form></div>`
+      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button><button method="GET" name="write" id="write-review" value=${coordinates} type="submit">Write Review</button></form></div>`
 
       var infowindow = new google.maps.InfoWindow({
         content: contentString,
