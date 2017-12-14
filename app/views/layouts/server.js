@@ -24,10 +24,10 @@ io.sockets.on('connection', function (socket) {
   console.log('Connected');
 
   var T = new Twit({
-    consumer_key:         ''
-  , consumer_secret:      ''
-  , access_token:         ''
-  , access_token_secret:  ''
+  consumer_key: 'CzzcGqXlEhNMd6K5MIk7HbpaA',
+  consumer_secret: '93tZgm8n6RPcS35HsFCTEjeEPGJAUlZnhSoMb3JB49wPuVcxmX',
+  access_token_key: '923001902232735746-q8jAS7yEWhKZrXtoNxAiNSg2x8mCPuZ',
+  access_token_secret: 'sPrT5y2c1VUaqpEu4Ou3ke8B3F8N08gdw0u6jKoK0b9i7',
 })
  T.stream('statuses/filter', { track: watchList },function (stream) {
 
