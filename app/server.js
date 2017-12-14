@@ -74,6 +74,7 @@ var T = new twit({
 
 io.sockets.on('connection', function(socket) {
   console.log("i m running")
+  console.log(watchList);
   T.stream('statuses/filter', {
     track: watchList
   }, function(stream) {
