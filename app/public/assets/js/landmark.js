@@ -1,11 +1,13 @@
 // Make sure we wait to attach our handlers until the DOM is fully loaded.
+
 $(document).ready(function() {
   //get all the reviews for certain landmark
   var coordinates;
+
   $("#map").on("submit", $("#check-review"), function(event) {
     event.preventDefault();
     console.log("i shouldn't be here?");
-    coordinates = $("#info-box").attr("data-lat")  + $("#info-box").attr("data-lng");
+    coordinates = $("#info-box").attr("data-lat") + $("#info-box").attr("data-lng");
     console.log("clicking something");
     $.ajax("/review/" + coordinates, {
       type: "GET"
@@ -14,9 +16,7 @@ $(document).ready(function() {
         // Reload the page to get the updated list
         console.log("i m here");
         location.assign("/review/" + coordinates);
-      }
-    );
-
+      });
   });
 
 
@@ -24,9 +24,9 @@ $(document).ready(function() {
   $(".create-form").on("submit", function(event) {
     // Make sure to preventDefault on a submit event.
     event.preventDefault();
-    console.log(window.location.href.substring(window.location.href.indexOf("view")+5));
+    console.log(window.location.href.substring(window.location.href.indexOf("view") + 5));
     var newReview = {
-      location: window.location.href.substring(window.location.href.indexOf("view")+5),
+      location: window.location.href.substring(window.location.href.indexOf("view") + 5),
       author: $("#auth").val().trim(),
       title: $("#title").val().trim(),
       body: $("#body").val().trim()
@@ -45,7 +45,7 @@ $(document).ready(function() {
     );
   });
   //update reviews
-  $(".update-review").on("submit", function(event) {
+  $("#update-review").on("submit", function(event) {
     // Make sure to preventDefault on a submit event.
     event.preventDefault();
 
@@ -69,7 +69,7 @@ $(document).ready(function() {
     );
   });
   //ajax call to get the most top rated reviews
-  $(".sort-by-top").click("submit", function(event) {
+  $("#sort-by-top").click("submit", function(event) {
     event.preventDefault();
     $.ajax("/api/sort/top" + coordinates, {
       type: "GET"
@@ -80,7 +80,7 @@ $(document).ready(function() {
     )
   });
   //sort by least voted reviews
-  $(".sort-by-least").click("submit", function(event) {
+  $("#sort-by-least").click("submit", function(event) {
     event.preventDefault();
     $.ajax("/api/sort/least" + coordinates, {
       type: "GET"
@@ -91,22 +91,22 @@ $(document).ready(function() {
     )
   });
   //ajax call to sort the reviews by most recent
-  $(".sort-by-recent").click("submit", function(event) {
+  $("#sort-by-recent").click("submit", function(event) {
     event.preventDefault();
     $.ajax("/api/sort/recent" + coordinates, {
       type: "GET"
     }).then(
       function() {
-        location.assign("/api/sort/least" + coordinates);
+        location.assign("/api/sort/recent" + coordinates);
       }
     )
   });
   //ajax call to update the rating of the review
-  $(".upvote-rating").click("submit", function(event) {
+  $("#upvote-rating").click("submit", function(event) {
     event.preventDefault();
     var id = $(this).data("id");
     var updatedRating = {
-      rating: $(".rating").val().trim()+1
+      rating: $(".rating").val().trim() + 1
     };
     $.ajax("/api/rating/" + id, {
       type: "PUT",
@@ -117,11 +117,11 @@ $(document).ready(function() {
       })
   })
 
-  $(".downvote-rating").click("submit", function(event) {
+  $("#downvote-rating").click("submit", function(event) {
     event.preventDefault();
     var id = $(this).data("id");
     var updatedRating = {
-      rating: $(".rating").val().trim()-1
+      rating: $(".rating").val().trim() - 1
     };
     $.ajax("/api/rating/" + id, {
       type: "PUT",
@@ -131,6 +131,9 @@ $(document).ready(function() {
         location.reload("/api/rating/" + id);
       })
   })
+
+
+
 });
 
 
@@ -202,6 +205,7 @@ function initAutocomplete() {
         position: place.geometry.location
       })
       //html for the info box from the place marker
+      var placeName = place.name;
       var coordinates = marker.getPosition().lat() + marker.getPosition().lng();
       contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button><button method="GET" name="write" id="write-review" value=${coordinates} type="submit">Write Review</button></form></div>`
 
@@ -213,6 +217,34 @@ function initAutocomplete() {
         infowindow.open(map, marker);
         console.log($("#info-box").attr("data-lat") + " " + $("#info-box").attr("data-lng"));
       });
+
+      marker.addListener("click", function() {
+        $.ajax("/tweets", {
+          type: "GET",
+          data: placeName
+        }).then(
+          function() {
+            var socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
+            socket.on('tweet', function(data) {
+              var template = '<div class="row" id="">' + $('.row:first').html() + '</div>';
+              $.each(data, function(key, tweet) {
+                if ($('#' + tweet.id).length) {
+                  return;
+                }
+                var tweet_view = $(template);
+                tweet_view.attr('id', tweet.id);
+                $('.span1 img', tweet_view).attr('src', tweet.user.profile_image_url);
+                $('.span2', tweet_view).text(tweet.user.screen_name);
+                $('.span9', tweet_view).text(tweet.text);
+
+                // Add the tweet to the DOM
+                $('#tweet-container').prepend(tweet_view);
+              })
+            });
+          })
+
+      });
+
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
         bounds.union(place.geometry.viewport);
@@ -224,5 +256,4 @@ function initAutocomplete() {
 
 
   });
-
 }

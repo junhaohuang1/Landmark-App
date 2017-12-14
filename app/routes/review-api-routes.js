@@ -12,28 +12,26 @@ var db = require("../models");
 // =============================================================
 module.exports = function(app) {
 
-  app.get("/", function(req, res) {
+  app.get('/', function(req, res) {
     res.render("map");
-
   });
-
 
   app.get("/review/:coordinates", function(req, res) {
-  // replace old function with sequelize function
-  db.Review.findAll({
-    where:{
-        location: req.params.coordinates
-    }
-  })
-  .then(function(data) {
-    // into the main index, updating the page
-    console.log("found something");
-    var hbsObject = {
-      reviews: data
-    };
-    res.render("reviews", hbsObject);
+    // replace old function with sequelize function
+    db.Review.findAll({
+        where: {
+          location: req.params.coordinates
+        }
+      })
+      .then(function(data) {
+        // into the main index, updating the page
+        console.log("found something");
+        var hbsObject = {
+          reviews: data
+        };
+        res.render("reviews", hbsObject);
+      });
   });
-});
 
   // POST route for saving a new post
   app.post("/review/add", function(req, res) {
