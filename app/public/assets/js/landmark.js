@@ -220,7 +220,7 @@ function initAutocomplete() {
 
       marker.addListener("click", function() {
         $.ajax("/tweets/"+placeName, {
-          type: "GET",
+          type: "POST",
         }).then(
           function() {
             var socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);

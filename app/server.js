@@ -37,11 +37,14 @@ app.use(bodyParser.urlencoded({
 // require("./routes/html-routes.js")(app);
 require("./routes/review-api-routes.js")(app);
 
-app.use(express.static("public"));
+app.use(express.static("app/public"));
 
 app.use(methodOverride("_method"));
+app.set('views', __dirname + '/views');
 app.engine("handlebars", exphbs({
-  defaultLayout: "main"
+    defaultLayout: "main",
+    layoutsDir: "app/views/layouts",
+    partialsDir: "app/views/partials"
 }));
 app.set("view engine", "handlebars");
 // Syncing our sequelize models and then starting our Express app
@@ -71,10 +74,12 @@ var T = new twit({
 })
 
 io.sockets.on('connection', function(socket) {
+  console.log("connected");
   T.stream('statuses/filter', {
     track: watchList
   }, function(stream) {
     stream.on('tweet', function(tweet) {
+      console.log("am i ever here");
       console.log(tweet);
       io.sockets.emit('tweet', tweet);
     });
