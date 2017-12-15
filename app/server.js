@@ -56,9 +56,11 @@ db.sequelize.sync({
 
 var watchList = [];
 
-app.get('/tweets', function(req, res) {
+app.get('/tweets/:placeName', function(req, res) {
+  console.log(req.params.placeName);
   watchList = [];
-  watchList.push(req.body.place);
+  watchList.push(req.params.placeName);
+  console.log("ajax"+watchList);
   res.render("map");
 });
 

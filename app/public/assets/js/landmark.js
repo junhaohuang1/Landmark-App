@@ -219,9 +219,8 @@ function initAutocomplete() {
       });
 
       marker.addListener("click", function() {
-        $.ajax("/tweets", {
+        $.ajax("/tweets/"+placeName, {
           type: "GET",
-          data: placeName
         }).then(
           function() {
             var socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
