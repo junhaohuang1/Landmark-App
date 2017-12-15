@@ -219,30 +219,37 @@ function initAutocomplete() {
       });
 
       marker.addListener("click", function() {
-        $.ajax("/tweets/"+placeName, {
-          type: "POST",
+        $.ajax("/tweets/" + placeName, {
+          type: "GET",
         }).then(
           function() {
+
             var socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
             socket.on('tweet', function(data) {
+              console.log("running");
               var template = '<div class="row" id="">' + $('.row:first').html() + '</div>';
-              $.each(data, function(key, tweet) {
-                if ($('#' + tweet.id).length) {
+              $.each(data, function() {
+                if ($('#' + data.id).length) {
                   return;
                 }
                 var tweet_view = $(template);
-                tweet_view.attr('id', tweet.id);
-                $('.span1 img', tweet_view).attr('src', tweet.user.profile_image_url);
-                $('.span2', tweet_view).text(tweet.user.screen_name);
-                $('.span9', tweet_view).text(tweet.text);
+                if(data.id){
+                  tweet_view.attr('id', data.id);
+                }
+                var imgTag = `<img src=${data.user.profile_image_url}>`
+                tweet_view.append(imgTag);
+                tweet_view.append(data.user.screen_name);
+                tweet_view.append(data.text);
 
+
+                $('#tweet-container').empty();
                 // Add the tweet to the DOM
                 $('#tweet-container').prepend(tweet_view);
               })
             });
           })
+      })
 
-      });
 
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
