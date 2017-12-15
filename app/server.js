@@ -54,12 +54,11 @@ db.sequelize.sync({
   });
 });
 
-var watchList = [];
+var watchList="";
 
 app.get('/tweets/:placeName', function(req, res) {
   console.log(req.params.placeName);
-  watchList = [];
-  watchList.push(req.params.placeName);
+  watchList = req.params.placeName;
   console.log("ajax"+watchList);
   res.render("map");
 });
@@ -71,12 +70,7 @@ var T = new twit({
   access_token_secret: 'Kc021mJBDi8YtOaUXUrBtYyurXoOqtfc59EMHHVsw42lO',
 })
 
-
-
-
 io.sockets.on('connection', function(socket) {
-  console.log("i m running")
-  console.log(watchList);
   T.stream('statuses/filter', {
     track: watchList
   }, function(stream) {
@@ -86,6 +80,9 @@ io.sockets.on('connection', function(socket) {
     });
   });
 });
+
+
+
 
 
 // Data
