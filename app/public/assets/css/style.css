@@ -103,3 +103,31 @@ li{
   background-color: white;
 }
 
+body{
+background: grey;
+      
+}
+
+h1{
+   font-family: "Comic Sans MS", cursive, sans-serif;
+     text-align: center;
+
+}
+
+h2{
+   font-family: "Comic Sans MS", cursive, sans-serif;
+     text-align: center;
+
+}
+
+form{
+    text-align: center;
+   
+}
+
+}
+li{
+ display:block;
+  float:left;
+}
+
