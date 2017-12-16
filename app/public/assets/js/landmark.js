@@ -236,6 +236,7 @@ function initAutocomplete() {
                 if(data.id){
                   tweet_view.attr('id', data.id);
                 }
+                
                 var imgTag = `<img src=${data.user.profile_image_url}>`
                 tweet_view.append(imgTag);
                 tweet_view.append(data.user.screen_name);
