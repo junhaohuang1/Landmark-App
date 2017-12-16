@@ -5,10 +5,15 @@ var methodOverride = require("method-override");
 var path = require("path");
 var exphbs = require("express-handlebars");
 var app = express();
+<<<<<<< HEAD
 var http = require('http');
 var server = http.createServer(app);
 var twit = require('twit');
 var io = require('socket.io').listen(server);
+=======
+Twit = require('twit');
+io = require('socket.io').listen(server);
+>>>>>>> master
 
 var PORT = process.env.PORT || 3000;
 
@@ -119,3 +124,4 @@ io.sockets.on('connection', function(socket) {
 // app.post("/landmark/add", function(req,res){
 //   res.render("some placeholder", {review: review})
 // })
+require("./public/assets/js/firebase.js")(app);
