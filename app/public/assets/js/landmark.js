@@ -141,7 +141,7 @@ function initAutocomplete() {
       //html for the info box from the place marker
       var placeName = place.name;
       var coordinates = marker.getPosition().lat() + marker.getPosition().lng();
-      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button></form></div>`
+      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button><button method="GET" name="write" id="write-review" value=${coordinates} type="submit">Write Review</button></form></div>`
 
       var infowindow = new google.maps.InfoWindow({
         content: contentString,
