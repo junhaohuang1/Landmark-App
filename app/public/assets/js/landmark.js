@@ -68,72 +68,6 @@ $(document).ready(function() {
       }
     );
   });
-  //ajax call to get the most top rated reviews
-  $("#sort-by-top").click("submit", function(event) {
-    event.preventDefault();
-    $.ajax("/api/sort/top" + coordinates, {
-      type: "GET"
-    }).then(
-      function() {
-        location.assign("/api/sort/top" + coordinates);
-      }
-    )
-  });
-  //sort by least voted reviews
-  $("#sort-by-least").click("submit", function(event) {
-    event.preventDefault();
-    $.ajax("/api/sort/least" + coordinates, {
-      type: "GET"
-    }).then(
-      function() {
-        location.assign("/api/sort/least" + coordinates);
-      }
-    )
-  });
-  //ajax call to sort the reviews by most recent
-  $("#sort-by-recent").click("submit", function(event) {
-    event.preventDefault();
-    $.ajax("/api/sort/recent" + coordinates, {
-      type: "GET"
-    }).then(
-      function() {
-        location.assign("/api/sort/recent" + coordinates);
-      }
-    )
-  });
-  //ajax call to update the rating of the review
-  $("#upvote-rating").click("submit", function(event) {
-    event.preventDefault();
-    var id = $(this).data("id");
-    var updatedRating = {
-      rating: $(".rating").val().trim() + 1
-    };
-    $.ajax("/api/rating/" + id, {
-      type: "PUT",
-      data: updatedRating
-    }).then(
-      function() {
-        location.reload("/api/rating/" + id);
-      })
-  })
-
-  $("#downvote-rating").click("submit", function(event) {
-    event.preventDefault();
-    var id = $(this).data("id");
-    var updatedRating = {
-      rating: $(".rating").val().trim() - 1
-    };
-    $.ajax("/api/rating/" + id, {
-      type: "PUT",
-      data: updatedRating
-    }).then(
-      function() {
-        location.reload("/api/rating/" + id);
-      })
-  })
-
-
-
 });
 
 
@@ -207,7 +141,7 @@ function initAutocomplete() {
       //html for the info box from the place marker
       var placeName = place.name;
       var coordinates = marker.getPosition().lat() + marker.getPosition().lng();
-      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button><button method="GET" name="write" id="write-review" value=${coordinates} type="submit">Write Review</button></form></div>`
+      contentString = `<div id="info-box" data-lat=${marker.getPosition().lat()} data-lng=${marker.getPosition().lng()} <label>${place.name}<br>${place.formatted_address}<br></label><br><form><button method="GET" name="review" id="check-review" value=${coordinates} type="submit">Check Reviews</button></form></div>`
 
       var infowindow = new google.maps.InfoWindow({
         content: contentString,
@@ -236,6 +170,7 @@ function initAutocomplete() {
                 if(data.id){
                   tweet_view.attr('id', data.id);
                 }
+                
                 var imgTag = `<img src=${data.user.profile_image_url}>`
                 tweet_view.append(imgTag);
                 tweet_view.append(data.user.screen_name);

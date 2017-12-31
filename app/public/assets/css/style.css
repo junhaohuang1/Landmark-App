@@ -77,3 +77,57 @@ html, body {
 #target {
   width: 345px;
 }
+
+#tweet-container{
+  border-style: solid;
+  height:50%;
+  width:500%;
+}
+
+.social{
+  width: 25px;
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 25px;
+}
+
+li{
+  border-style: solid;
+  height:50%;
+  width:50%;
+  text-align: center;
+  margin-top: 25px;
+}
+
+#title{
+  background-color: white;
+}
+
+body{
+background: grey;
+      
+}
+
+h1{
+   font-family: "Comic Sans MS", cursive, sans-serif;
+     text-align: center;
+
+}
+
+h2{
+   font-family: "Comic Sans MS", cursive, sans-serif;
+     text-align: center;
+
+}
+
+form{
+    text-align: center;
+   
+}
+
+}
+li{
+ display:block;
+  float:left;
+}
+
