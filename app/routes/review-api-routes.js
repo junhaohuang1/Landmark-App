@@ -106,12 +106,13 @@ module.exports = function(app) {
       query.coordinates = req.params.coordinates;
     }
     db.Review.findAll({
-        where: {
-          location:query
-        },
+      include: [{
+        model: db.Author,
+        where: query,
         order: [
           ["timestamps", "ASC"]
         ]
+      }]
     }).then(function(data) {
       var hbsObject = {
         reviews: data
