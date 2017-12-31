@@ -80,6 +80,7 @@ $(document).ready(function() {
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
 function initAutocomplete() {
+  var socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: -33.8688,
@@ -153,36 +154,28 @@ function initAutocomplete() {
       });
 
       marker.addListener("click", function() {
-        $.ajax("/tweets/" + placeName, {
-          type: "GET",
-        }).then(
-          function() {
+        $('#tweet-container').empty();
+        socket.emit("keyword-change", placeName);
+        socket.on('twitter-stream', function(data) {
+          var template = '<div class="row">' + '</div>';
+          $.each(data, function() {
+            if ($('#' + data.id).length) {
+              return;
+            }
+            var tweet_view = $(template);
+            if (data.id) {
+              tweet_view.attr('id', data.id);
+            }
 
-            var socket = io.connect('http://' + window.location.hostname + ':' + window.location.port);
-            socket.on('tweet', function(data) {
-              console.log("running");
-              var template = '<div class="row" id="">' + $('.row:first').html() + '</div>';
-              $.each(data, function() {
-                if ($('#' + data.id).length) {
-                  return;
-                }
-                var tweet_view = $(template);
-                if(data.id){
-                  tweet_view.attr('id', data.id);
-                }
-                
-                var imgTag = `<img src=${data.user.profile_image_url}>`
-                tweet_view.append(imgTag);
-                tweet_view.append(data.user.screen_name);
-                tweet_view.append(data.text);
+            var imgTag = `<img src=${data.user.profile_image_url}>`
+            tweet_view.append(imgTag);
+            tweet_view.append(data.user.screen_name);
+            tweet_view.append(data.text);
 
-
-                $('#tweet-container').empty();
-                // Add the tweet to the DOM
-                $('#tweet-container').prepend(tweet_view);
-              })
-            });
+            // Add the tweet to the DOM
+            $('#tweet-container').prepend(tweet_view);
           })
+        });
       })
 
 
