@@ -42,14 +42,12 @@ app.use(bodyParser.urlencoded({
 // require("./routes/html-routes.js")(app);
 require("./routes/review-api-routes.js")(app);
 
-app.use(express.static("app/public"));
+app.use(express.static("public"));
 
 app.use(methodOverride("_method"));
 app.set('views', __dirname + '/views');
 app.engine("handlebars", exphbs({
   defaultLayout: "main",
-  layoutsDir: "app/views/layouts",
-  partialsDir: "app/views/partials"
 }));
 app.set("view engine", "handlebars");
 // Syncing our sequelize models and then starting our Express app
@@ -62,39 +60,52 @@ db.sequelize.sync({
   });
 });
 
-var watchList = "";
-
-app.get('/tweets/:placeName', function(req, res) {
-  console.log(req.params.placeName);
-  watchList = req.params.placeName;
-  console.log("ajax" + watchList);
-  res.render("map");
-});
-
 var T = new twit({
   consumer_key: 'gxe3kwcWCKdhd4AjLwBy8qJbK',
   consumer_secret: '9JwPuh5ohep3tBrG37XmYk0YtBV4yShvNFTNKJ3Jgt0HFVh3M4',
   access_token: '4710469953-L5wvi9Iy4z0AfYoBbzPnykI00sS71mx2HsmtK98',
   access_token_secret: 'Kc021mJBDi8YtOaUXUrBtYyurXoOqtfc59EMHHVsw42lO',
-})
+});
+
+var stream = null, // Define global stream holder as we will only ever have ONE active stream
+  currentKeyword = null; // Hold the current keyword we are streaming
+
+
+function createStream(keyword) {
+  stream = T.stream('statuses/filter', {
+    track: keyword
+  }); // Defines a new stream tracked by the keyword
+
+  stream.on('tweet', function(tweet) {
+    io.sockets.emit('twitter-stream', tweet);
+  });
+
+  stream.on('connect', function() { // Log a new connection to the stream
+    console.log('Connected to twitter stream using keyword => ' + keyword);
+  });
+
+  stream.on('disconnect', function() // Log a disconnection from the stream
+    {
+      console.log('Disconnected from twitter stream using keyword => ' + keyword);
+    });
+
+  return stream; // Return the stream
+}
 
 io.sockets.on('connection', function(socket) {
   console.log("connected");
-  var stream = T.stream('statuses/filter', {
-    track: watchList
-  })
-  stream.on('tweet', function(tweet) {
-    console.log("am i ever here");
-    console.log(tweet);
-    io.sockets.emit('tweet', tweet);
-  });
-});
+  socket.on('keyword-change', function(keyword){ // On a keyword change request from the client
+      if (stream !== null){// If the stream is currently running
+        stream.stop(); // Stop the current stream
+        console.log('Stream Stopped'); // Log a message
+      }
+      stream = createStream(keyword); // Create a new stream using the keyword passed from the client
 
+      currentKeyword = keyword; // Set the currentKeyword holder to the passed keyword
 
+      io.sockets.emit('keyword-changed', currentKeyword); // Emit an event to ALL clients passing through the new keyword
 
-
-
-
+<<<<<<< HEAD:app/server.js
 // Data
 //
 // var express = require("express");
@@ -125,3 +136,8 @@ io.sockets.on('connection', function(socket) {
 //   res.render("some placeholder", {review: review})
 // })
 require("./public/assets/js/firebase.js")(app);
+=======
+      console.log('Stream restarted with keyword => ' + currentKeyword); // Log a message
+    });
+});
+>>>>>>> sequelizetest:server.js
