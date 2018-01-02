@@ -1,7 +1,5 @@
 #map {
-  height: 50%;
-  width: 50%;
-  {border-style: solid;}
+  height: 100%;
 }
 /* Optional: Makes the sample page fill the window. */
 html, body {
@@ -107,7 +105,7 @@ li{
 
 body{
 background: grey;
-      
+
 }
 
 h1{
@@ -124,7 +122,7 @@ h2{
 
 form{
     text-align: center;
-   
+
 }
 
 }
@@ -132,4 +130,3 @@ li{
  display:block;
   float:left;
 }
-
